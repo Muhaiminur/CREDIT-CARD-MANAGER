@@ -38,13 +38,13 @@ public class Two_Adapter extends PagerAdapter {
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View)object);
+        container.removeView((View) object);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
-        View view = layoutInflater.inflate(R.layout.item_two,container,false);
-        CreditCardView card = (CreditCardView)view.findViewById(R.id.card);
+        View view = layoutInflater.inflate(R.layout.item_two, container, false);
+        CreditCardView card = view.findViewById(R.id.card);
         //imageView.setImageResource(lstImages.get(position));
         card.setCVV(card_list.get(position).getCvv());
         card.setCardHolderName(card_list.get(position).getName());
@@ -54,9 +54,13 @@ public class Two_Adapter extends PagerAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("abir","ok");
+                /*Log.d("abir","ok");
                 Intent intent = new Intent(context, ADD_CARD.class);
                 intent.putExtra("card_number",card_list.get(position).getCardNumber());
+                context.startActivity(intent);*/
+
+                Intent intent = new Intent(context, Card_Details.class);
+                intent.putExtra("card_number", card_list.get(position).getCardNumber());
                 context.startActivity(intent);
             }
         });

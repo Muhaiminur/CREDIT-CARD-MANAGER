@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
     <com.cooltechworks.creditcarddesign.CreditCardView
         android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:card_number="38056789000000000"
-        app:card_holder_name="HARISH SRIDHARAN"
+        app:card_holder_name="Muhaiminur Rahman"
         app:cvv="522"
-        app:card_expiration="01/17" />
+        app:card_expiration="01/26" />
 </LinearLayout>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangular_border_blue"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/dialog_layout_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_white"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:padding="10dp"
+                android:text="@string/expense_edit_title_string"
+                android:textAlignment="center"
+                android:textColor="@color/app_white"
+                android:textSize="20sp" />
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/card_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="textStart"
+                app:ms_arrowColor="@color/colorPrimaryDark"
+                app:ms_baseColor="@color/colorPrimaryDark"
+                app:ms_enableErrorLabel="true"
+                app:ms_enableFloatingLabel="true"
+                app:ms_floatingLabelColor="@color/app_hint"
+                app:ms_floatingLabelText="@string/select_card_string"
+                app:ms_hint="@string/select_card_string"
+                app:ms_hintColor="@color/app_hint"
+                app:ms_hintTextSize="20sp"
+                app:ms_multiline="false" />
+
+            <EditText
+                android:id="@+id/expense_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_border_blue"
+                android:hint="@string/select_name_string"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/app_hint"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/expense_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_border_blue"
+                android:hint="@string/select_price_string"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/app_hint"
+                android:textSize="20sp" />
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/expense_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="textStart"
+                app:ms_arrowColor="@color/colorPrimaryDark"
+                app:ms_baseColor="@color/colorPrimaryDark"
+                app:ms_enableErrorLabel="true"
+                app:ms_enableFloatingLabel="true"
+                app:ms_floatingLabelColor="@color/app_hint"
+                app:ms_floatingLabelText="@string/select_type_hint_string"
+                app:ms_hint="@string/select_type_hint_string"
+                app:ms_hintColor="@color/app_hint"
+                app:ms_hintTextSize="20sp"
+                app:ms_multiline="false" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:paddingBottom="10dp">
+
+                <Button
+                    android:id="@+id/expense_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:text="cancel"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/expense_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rectangular_blue"
+                    android:gravity="center"
+                    android:text="OK"
+                    android:textColor="@color/app_white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

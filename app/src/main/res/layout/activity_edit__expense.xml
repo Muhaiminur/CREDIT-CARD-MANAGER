@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Edit_Expense">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="5dp"
+        app:cardMaxElevation="5dp"
+        app:contentPadding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/card_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="textStart"
+                app:ms_arrowColor="@color/colorPrimaryDark"
+                app:ms_baseColor="@color/colorPrimaryDark"
+                app:ms_enableErrorLabel="true"
+                app:ms_enableFloatingLabel="true"
+                app:ms_floatingLabelColor="@color/app_hint"
+                app:ms_floatingLabelText="@string/select_card_string"
+                app:ms_hint="@string/select_card_string"
+                app:ms_hintColor="@color/app_hint"
+                app:ms_hintTextSize="20sp"
+                app:ms_multiline="false" />
+
+            <EditText
+                android:id="@+id/expense_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_border_blue"
+                android:hint="@string/select_name_string"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/app_hint"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/expense_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_border_blue"
+                android:hint="@string/select_price_string"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/app_hint"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/expense_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_border_blue"
+                android:hint="@string/select_date_string"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:textAlignment="textStart"
+                android:textColorHint="@color/app_hint"
+                android:textSize="20sp" />
+
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/expense_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textAlignment="textStart"
+                app:ms_arrowColor="@color/colorPrimaryDark"
+                app:ms_baseColor="@color/colorPrimaryDark"
+                app:ms_enableErrorLabel="true"
+                app:ms_enableFloatingLabel="true"
+                app:ms_floatingLabelColor="@color/app_hint"
+                app:ms_floatingLabelText="@string/select_type_hint_string"
+                app:ms_hint="@string/select_type_hint_string"
+                app:ms_hintColor="@color/app_hint"
+                app:ms_hintTextSize="20sp"
+                app:ms_multiline="false" />
+
+            <Button
+                android:id="@+id/expense_save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rectangular_blue"
+                android:maxLines="1"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="5dp"
+                android:text="@string/select_save_string"
+                android:textAlignment="center"
+                android:textColor="@color/app_white"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</ScrollView>

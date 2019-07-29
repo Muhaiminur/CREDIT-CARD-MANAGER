@@ -1,14 +1,22 @@
 package com.debit_credit_card.creditcardmanager;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,25 +25,41 @@ import android.widget.Toast;
 import com.cooltechworks.creditcarddesign.CardEditActivity;
 import com.cooltechworks.creditcarddesign.CreditCardUtils;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdIconView;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdOptionsView;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
+import com.facebook.ads.AudienceNetworkAds;
+import com.facebook.ads.InterstitialAd;
+import com.facebook.ads.InterstitialAdListener;
+import com.facebook.ads.MediaView;
+import com.facebook.ads.NativeAd;
+import com.facebook.ads.NativeAdLayout;
+import com.facebook.ads.NativeAdListener;
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fr.ganfra.materialspinner.MaterialSpinner;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-
-import com.facebook.ads.*;
 
 public class MainActivity extends AppCompatActivity {
 
     Realm realm;
     RealmResults<CARD> card_list;
     Context context;
+
+    CARD edit_card;
 
     List<CARD> card_list2 = new ArrayList<>();
     @BindView(R.id.fab)
@@ -44,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     final int GET_NEW_CARD = 2;
 
     Two_Adapter adapter;
+    @BindView(R.id.fab_add)
+    FloatingActionButton fabAdd;
 
     private AdView adView;
 
@@ -52,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
     private NativeAdLayout nativeAdLayout;
     private LinearLayout adView2;
     private InterstitialAd interstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         try {
-            context =MainActivity.this;
+            context = MainActivity.this;
             Realm.init(this);
             RealmConfiguration config = new RealmConfiguration.Builder()
                     .name("card.realm")
@@ -75,12 +102,12 @@ public class MainActivity extends AppCompatActivity {
                 card_list2.add(movie1);
                 card_list2.add(movie2);
                 card_list2.add(movie3);
-            }else {
-                for (CARD c:card_list){
+            } else {
+                for (CARD c : card_list) {
                     card_list2.add(c);
                 }
             }
-            final HorizontalInfiniteCycleViewPager pager = (HorizontalInfiniteCycleViewPager) findViewById(R.id.horizontal_cycle);
+            final HorizontalInfiniteCycleViewPager pager = findViewById(R.id.horizontal_cycle);
             adapter = new Two_Adapter(card_list2, context);
             pager.setAdapter(adapter);
 
@@ -94,24 +121,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.fab)
+    /*@OnClick(R.id.fab)
     public void onViewClicked() {
         //startActivity(new Intent(context,ADD_CARD.class));
 
         Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
-        startActivityForResult(intent,GET_NEW_CARD);
-    }
+        startActivityForResult(intent, GET_NEW_CARD);
+    }*/
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
 
         try {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 String cardHolderName = data.getStringExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME);
                 String cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER);
                 String expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY);
                 String cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV);
-                if (cardHolderName!=null||cardNumber!=null||expiry!=null||cvv!=null){
+                if (cardHolderName != null || cardNumber != null || expiry != null || cvv != null) {
                     realm.beginTransaction();
                     CARD re = realm.createObject(CARD.class);
                     re.setName(cardHolderName);
@@ -121,14 +148,14 @@ public class MainActivity extends AppCompatActivity {
                     realm.commitTransaction();
                 }
                 // Your processing goes here.
-                Log.d("card",cardHolderName+cardNumber+expiry+cvv);
+                Log.d("card", cardHolderName + cardNumber + expiry + cvv);
                 /*card_list2.clear();
                 for (CARD c:card_list){
                     card_list2.add(c);
                 }
                 adapter.notifyDataSetChanged();*/
                 Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
@@ -149,11 +176,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void banner_add(){
+    public void banner_add() {
         adView = new AdView(this, getResources().getString(R.string.home_page_banner), AdSize.BANNER_HEIGHT_50);
 
         // Find the Ad Container
-        LinearLayout adContainer = (LinearLayout) findViewById(R.id.banner_container);
+        LinearLayout adContainer = findViewById(R.id.banner_container);
 
         // Add the ad view to your activity layout
         adContainer.addView(adView);
@@ -162,8 +189,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Ad ad, AdError adError) {
                 // Ad error callback
-                Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -186,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
         // Request an ad
         adView.loadAd();
     }
-
 
 
     private void loadNativeAd() {
@@ -278,7 +303,7 @@ public class MainActivity extends AppCompatActivity {
                 clickableViews);
     }
 
-    public void interstaler(){
+    public void interstaler() {
         interstitialAd = new InterstitialAd(this, getResources().getString(R.string.inter));
         // Set listeners for the Interstitial Ad
         interstitialAd.setAdListener(new InterstitialAdListener() {
@@ -326,20 +351,21 @@ public class MainActivity extends AppCompatActivity {
         interstitialAd.loadAd();
         showAdWithDelay();
     }
+
     private void showAdWithDelay() {
         /**
          * Here is an example for displaying the ad with delay;
          * Please do not copy the Handler into your project
          */
-         Handler handler = new Handler();
+        Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run() {
                 // Check if interstitialAd has been loaded successfully
-                if(interstitialAd == null || !interstitialAd.isAdLoaded()) {
+                if (interstitialAd == null || !interstitialAd.isAdLoaded()) {
                     return;
                 }
                 // Check if ad is already expired or invalidated, and do not show ad if that is the case. You will not get paid to show an invalidated ad.
-                if(interstitialAd.isAdInvalidated()) {
+                if (interstitialAd.isAdInvalidated()) {
                     return;
                 }
                 // Show the ad
@@ -347,4 +373,129 @@ public class MainActivity extends AppCompatActivity {
             }
         }, 1000 * 30); // Show the ad after 15 minutes
     }
+
+    @OnClick({R.id.fab, R.id.fab_add})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.fab:
+                try {
+                    Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
+                    startActivityForResult(intent, GET_NEW_CARD);
+                } catch (Exception e) {
+                    Log.d("Error Line Number", Log.getStackTraceString(e));
+                }
+                break;
+            case R.id.fab_add:
+                if (card_list.size() > 0) {
+                    startActivity(new Intent(context, ADD_EXPENSE.class));
+                } else {
+                    Toast.makeText(MainActivity.this, "FIRST ADD NEW CARD", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.item1:
+                try {
+                    Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
+                    startActivityForResult(intent, GET_NEW_CARD);
+                } catch (Exception e) {
+                    Log.d("Error Line Number", Log.getStackTraceString(e));
+                }
+                return true;
+            case R.id.item2:
+                try {
+                    showFilterDialog();
+                } catch (Exception e) {
+                    Log.d("Error Line Number", Log.getStackTraceString(e));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void showFilterDialog() {
+        try {
+            HashMap<String, Integer> screen = getScreenRes();
+            int width = screen.get(SCREEN_WIDTH);
+            int height = screen.get(SCREEN_HEIGHT);
+            int mywidth = (width / 10) * 9;
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            dialog.setContentView(R.layout.edit_card_dialoug);
+            final MaterialSpinner card_spinner = dialog.findViewById(R.id.card_name);
+            Button yes = dialog.findViewById(R.id.card_edit);
+            Button no = dialog.findViewById(R.id.card_cancel);
+            Spinner_Adapter cardadapter = new Spinner_Adapter(context, card_list);
+            card_spinner.setAdapter(cardadapter);
+            LinearLayout ll = dialog.findViewById(R.id.dialog_layout_size);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) ll.getLayoutParams();
+            params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+            params.width = mywidth;
+            ll.setLayoutParams(params);
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    if (edit_card != null) {
+                        Intent intent = new Intent(context, ADD_CARD.class);
+                        intent.putExtra("card_number", edit_card.getCardNumber());
+                        context.startActivity(intent);
+                    }
+                }
+            });
+            no.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            card_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position != -1) {
+                        edit_card = ((CARD) parent.getAdapter().getItem(position));
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+            dialog.setCancelable(true);
+            dialog.show();
+        } catch (Exception e) {
+            Log.d("Error Line Number", Log.getStackTraceString(e));
+        }
+    }
+
+    public HashMap<String, Integer> getScreenRes() {
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        DisplayMetrics metrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        map.put(SCREEN_WIDTH, width);
+        map.put(SCREEN_HEIGHT, height);
+        map.put(SCREEN_DENSITY, (int) metrics.density);
+        return map;
+    }
+
+    public static String SCREEN_WIDTH = "width";
+    public static String SCREEN_HEIGHT = "height";
+    public static String SCREEN_DENSITY = "density";
 }

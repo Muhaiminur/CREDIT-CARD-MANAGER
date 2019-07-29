@@ -14,7 +14,7 @@
         <com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager
             android:id="@+id/horizontal_cycle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
             app:icvp_scroll_duration="250"
             app:icvp_center_page_scale_offset="30dp"
@@ -48,8 +48,15 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="start|bottom"
+        android:src="@drawable/ic_add_credit"
+        android:layout_margin="20dp"/>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@drawable/add"
+        android:src="@drawable/ic_add_money"
         android:layout_margin="20dp"/>
     <LinearLayout
         android:id="@+id/banner_container"

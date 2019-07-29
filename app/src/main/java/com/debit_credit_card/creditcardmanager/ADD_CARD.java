@@ -7,10 +7,12 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cooltechworks.creditcarddesign.CardEditActivity;
 import com.cooltechworks.creditcarddesign.CreditCardUtils;
@@ -60,13 +62,17 @@ public class ADD_CARD extends AppCompatActivity {
     private NativeAd nativeAd;
     private NativeAdLayout nativeAdLayout;
     private LinearLayout adView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add__card);
         ButterKnife.bind(this);
         try {
-            context=ADD_CARD.this;
+            getSupportActionBar().setHomeButtonEnabled(true);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(getResources().getString(R.string.edit_card_title_string));
+            context = ADD_CARD.this;
             RealmConfiguration config = new RealmConfiguration.Builder()
                     .name("card.realm")
                     .schemaVersion(1)
@@ -102,7 +108,7 @@ public class ADD_CARD extends AppCompatActivity {
                 break;
             case R.id.fab_edit:
                 try {
-                    if (card!=null){
+                    if (card != null) {
                         Intent intent = new Intent(context, CardEditActivity.class);
                         intent.putExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME, card.getName());
                         intent.putExtra(CreditCardUtils.EXTRA_CARD_NUMBER, card.getCardNumber());
@@ -110,6 +116,8 @@ public class ADD_CARD extends AppCompatActivity {
                         intent.putExtra(CreditCardUtils.EXTRA_CARD_CVV, card.getCvv());
                         intent.putExtra(CreditCardUtils.EXTRA_VALIDATE_EXPIRY_DATE, true); // pass "false" to discard expiry date validation.
                         startActivityForResult(intent, EDIT_CARD);
+                    } else {
+                        Toast.makeText(this, "You have to add card before Edit", Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     Log.d("Error Line Number", Log.getStackTraceString(e));
@@ -121,13 +129,13 @@ public class ADD_CARD extends AppCompatActivity {
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
 
         try {
-            if(resultCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
 
                 String cardHolderName = data.getStringExtra(CreditCardUtils.EXTRA_CARD_HOLDER_NAME);
                 String cardNumber = data.getStringExtra(CreditCardUtils.EXTRA_CARD_NUMBER);
                 String expiry = data.getStringExtra(CreditCardUtils.EXTRA_CARD_EXPIRY);
                 String cvv = data.getStringExtra(CreditCardUtils.EXTRA_CARD_CVV);
-                if (cardHolderName!=null||cardNumber!=null||expiry!=null||cvv!=null){
+                if (cardHolderName != null || cardNumber != null || expiry != null || cvv != null) {
                     if (card_number != null) {
                         CARD re = realm.where(CARD.class).equalTo("cardNumber", card_number).findFirst();
                         realm.beginTransaction();
@@ -139,9 +147,9 @@ public class ADD_CARD extends AppCompatActivity {
                     }
                 }
                 // Your processing goes here.
-                Log.d("card",cardHolderName+cardNumber+expiry+cvv);
+                Log.d("card", cardHolderName + cardNumber + expiry + cvv);
                 Intent i = getBaseContext().getPackageManager()
-                        .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+                        .getLaunchIntentForPackage(getBaseContext().getPackageName());
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
                 finish();
@@ -238,5 +246,11 @@ public class ADD_CARD extends AppCompatActivity {
                 nativeAdMedia,
                 nativeAdIcon,
                 clickableViews);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return true;
     }
 }
