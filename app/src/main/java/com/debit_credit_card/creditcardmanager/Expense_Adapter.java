@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,21 +57,25 @@ public class Expense_Adapter extends RecyclerView.Adapter<Expense_Adapter.MyView
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         final EXPENSE bodyResponse = expenses_list.get(position);
-        if (position % 2 == 0) {
-            holder.cardName.setBackgroundColor(Color.parseColor("#f1f6fd"));
-        } else {
-            holder.cardName.setBackgroundColor(Color.parseColor("#ffffff"));
+        try {
+            if (position % 2 == 0) {
+                holder.cardName.setBackgroundColor(Color.parseColor("#f1f6fd"));
+            } else {
+                holder.cardName.setBackgroundColor(Color.parseColor("#ffffff"));
+            }
+            holder.expenseName.setText(bodyResponse.getExpensename());
+            if (bodyResponse.getExpensetype().equalsIgnoreCase(context.getResources().getString(R.string.select_credit_string))) {
+                holder.expenseMoney.setText(bodyResponse.getExpensemoney());
+                holder.expenseMoney.setTextColor(context.getResources().getColor(R.color.green_color));
+            } else {
+                holder.expenseMoney.setText(bodyResponse.getExpensemoney());
+            }
+            holder.expenseType.setText(bodyResponse.getExpensetype());
+            Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+            holder.expenseDate.setText(formatter.format(bodyResponse.getExpensedate()));
+        } catch (Exception e) {
+            Log.d("Error Line Number", Log.getStackTraceString(e));
         }
-        holder.expenseName.setText(bodyResponse.getExpensename());
-        if (bodyResponse.getExpensetype().equalsIgnoreCase(context.getResources().getString(R.string.select_credit_string))) {
-            holder.expenseMoney.setText(bodyResponse.getExpensemoney());
-            holder.expenseMoney.setTextColor(context.getResources().getColor(R.color.green_color));
-        } else {
-            holder.expenseMoney.setText(bodyResponse.getExpensemoney());
-        }
-        holder.expenseType.setText(bodyResponse.getExpensetype());
-        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-        holder.expenseDate.setText(formatter.format(bodyResponse.getExpensedate()));
     }
 
     @Override

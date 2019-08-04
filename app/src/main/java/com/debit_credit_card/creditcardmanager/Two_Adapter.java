@@ -44,26 +44,30 @@ public class Two_Adapter extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         View view = layoutInflater.inflate(R.layout.item_two, container, false);
-        CreditCardView card = view.findViewById(R.id.card);
-        //imageView.setImageResource(lstImages.get(position));
-        card.setCVV(card_list.get(position).getCvv());
-        card.setCardHolderName(card_list.get(position).getName());
-        card.setCardExpiry(card_list.get(position).getExpiry());
-        card.setCardNumber(card_list.get(position).getCardNumber());
-        container.addView(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        try {
+            CreditCardView card = view.findViewById(R.id.card);
+            //imageView.setImageResource(lstImages.get(position));
+            card.setCVV(card_list.get(position).getCvv());
+            card.setCardHolderName(card_list.get(position).getName());
+            card.setCardExpiry(card_list.get(position).getExpiry());
+            card.setCardNumber(card_list.get(position).getCardNumber());
+            container.addView(view);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                 /*Log.d("abir","ok");
                 Intent intent = new Intent(context, ADD_CARD.class);
                 intent.putExtra("card_number",card_list.get(position).getCardNumber());
                 context.startActivity(intent);*/
 
-                Intent intent = new Intent(context, Card_Details.class);
-                intent.putExtra("card_number", card_list.get(position).getCardNumber());
-                context.startActivity(intent);
-            }
-        });
+                    Intent intent = new Intent(context, Card_Details.class);
+                    intent.putExtra("card_number", card_list.get(position).getCardNumber());
+                    context.startActivity(intent);
+                }
+            });
+        } catch (Exception e) {
+            Log.d("Error Line Number", Log.getStackTraceString(e));
+        }
         return view;
     }
 }

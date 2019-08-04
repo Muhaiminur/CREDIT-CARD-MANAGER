@@ -44,7 +44,7 @@ public class Spinner_Adapter extends BaseAdapter {
         }
         CARD jsonObject = jsonArray.get(i);
         TextView tvName = view.findViewById(R.id.tv_name);
-        tvName.setText(jsonObject.getName()+"/ "+jsonObject.getCardNumber());
+        tvName.setText(jsonObject.getName() + "/ " + jsonObject.getCardNumber());
         return view;
     }
 }
