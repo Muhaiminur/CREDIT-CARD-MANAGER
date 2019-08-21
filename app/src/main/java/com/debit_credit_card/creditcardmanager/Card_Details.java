@@ -3,8 +3,10 @@ package com.debit_credit_card.creditcardmanager;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -194,6 +196,7 @@ public class Card_Details extends AppCompatActivity {
             expense_price.setText(ex.getExpensemoney());
             Button yes = dialog.findViewById(R.id.expense_edit);
             Button no = dialog.findViewById(R.id.expense_cancel);
+            Button delete = dialog.findViewById(R.id.expense_delete);
             RealmResults<CARD> card_list = realm.where(CARD.class).findAll();
             Spinner_Adapter cardadapter = new Spinner_Adapter(context, card_list);
             card_spinner.setAdapter(cardadapter);
@@ -240,6 +243,18 @@ public class Card_Details extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     dialog.dismiss();
+                }
+            });
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        dialog.dismiss();
+                        AlertDialog diaBox = AskOption(ex);
+                        diaBox.show();
+                    } catch (Exception e) {
+                        Log.d("Error Line Number", Log.getStackTraceString(e));
+                    }
                 }
             });
             card_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -290,4 +305,49 @@ public class Card_Details extends AppCompatActivity {
     public static String SCREEN_WIDTH = "width";
     public static String SCREEN_HEIGHT = "height";
     public static String SCREEN_DENSITY = "density";
+
+
+    private AlertDialog AskOption(EXPENSE e) {
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
+                //set message, title, and icon
+                .setTitle("Delete Your Expense?")
+                .setMessage("Do you want to Delete")
+                .setIcon(R.drawable.ic_pencil)
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        try {
+                            //your deleting code
+                            realm.executeTransaction(new Realm.Transaction() {
+                                @Override
+                                public void execute(Realm realm) {
+                                    // remove a single object
+                                    e.deleteFromRealm();
+                                    expense_adapter.notifyDataSetChanged();
+                                    Intent intent = getIntent();
+                                    finish();
+                                    startActivity(intent);
+                                }
+                            });
+                        } catch (Exception e) {
+                            Log.d("Error Line Number", Log.getStackTraceString(e));
+                        }
+                        dialog.dismiss();
+                    }
+
+                })
+
+
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
+    }
 }

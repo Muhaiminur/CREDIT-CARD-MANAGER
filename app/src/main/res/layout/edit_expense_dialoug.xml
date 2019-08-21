@@ -113,6 +113,20 @@
                 android:orientation="horizontal"
                 android:padding="5dp"
                 android:paddingBottom="10dp">
+                <Button
+                    android:id="@+id/expense_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="2.5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/rectangular_red"
+                    android:gravity="center"
+                    android:text="Delete"
+                    android:textColor="@color/app_white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/expense_cancel"
@@ -122,7 +136,7 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@android:color/white"
+                    android:background="@drawable/rectangular_white"
                     android:gravity="center"
                     android:text="cancel"
                     android:textColor="@color/colorPrimaryDark"
