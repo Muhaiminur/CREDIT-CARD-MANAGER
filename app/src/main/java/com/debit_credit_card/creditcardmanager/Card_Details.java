@@ -28,6 +28,11 @@ import android.widget.Toast;
 import com.cooltechworks.creditcarddesign.CreditCardView;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -65,6 +70,8 @@ public class Card_Details extends AppCompatActivity {
 
     CARD Selected_card;
     String type;
+
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +173,12 @@ public class Card_Details extends AppCompatActivity {
 
                     }
                 }));
+            }
+
+            try {
+                banner_add();
+            } catch (Exception e) {
+                Log.d("Error Line Number", Log.getStackTraceString(e));
             }
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
@@ -349,5 +362,51 @@ public class Card_Details extends AppCompatActivity {
                 .create();
         return myQuittingDialogBox;
 
+    }
+
+
+    public void banner_add() {
+        adView = new AdView(this, getResources().getString(R.string.card_details_banner), AdSize.BANNER_HEIGHT_50);
+
+        // Find the Ad Container
+        LinearLayout adContainer = findViewById(R.id.banner_details_container);
+
+        // Add the ad view to your activity layout
+        adContainer.addView(adView);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+                //Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+
+        // Request an ad
+        adView.loadAd();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null) {
+            adView.destroy();
+        }
+        super.onDestroy();
     }
 }

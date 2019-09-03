@@ -5,6 +5,9 @@
     <string name="add_card_native">934548976934084_934591486929833</string>
     <string name="home_page_banner">934548976934084_934592326929749</string>
     <string name="home_page_native">934548976934084_934593226929659</string>
+    <string name="card_details_banner">934548976934084_1123827858006194</string>
+
+    <!--<string name="inter">VID_HD_9_16_39S_LINK#934548976934084_934589323596716</string>-->
 
     <string name="edit_card_title_string">EDIT CARD</string>
     <string name="add_expense_title_string">ADD EXPENSE</string>

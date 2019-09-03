@@ -371,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                 // Show the ad
                 interstitialAd.show();
             }
-        }, 1000 * 30); // Show the ad after 15 minutes
+        }, 9000 * 30); // Show the ad after 15 minutes
     }
 
     @OnClick({R.id.fab, R.id.fab_add})

@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@drawable/ic_background">
+    android:background="@drawable/ic_background"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/banner_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dp"
+        android:orientation="vertical" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/fab"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:weightSum="2">
+
         <com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager
             android:id="@+id/horizontal_cycle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
-            app:icvp_scroll_duration="250"
-            app:icvp_center_page_scale_offset="30dp"
-            app:icvp_min_page_scale_offset="5dp"
-            app:icvp_max_page_scale="0.8"
-            app:icvp_min_page_scale="0.55"
-            app:icvp_medium_scaled="false"
             android:layout_weight="1"
-            />
+            app:icvp_center_page_scale_offset="30dp"
+            app:icvp_interpolator="@android:anim/accelerate_decelerate_interpolator"
+            app:icvp_max_page_scale="0.8"
+            app:icvp_medium_scaled="false"
+            app:icvp_min_page_scale="0.55"
+            app:icvp_min_page_scale_offset="5dp"
+            app:icvp_scroll_duration="250" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical">
+
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="50dp">
+                android:layout_height="wrap_content">
 
                 <com.facebook.ads.NativeAdLayout
                     android:id="@+id/native_ad_container"
@@ -44,25 +56,24 @@
         </LinearLayout>
 
     </LinearLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="start|bottom"
-        android:src="@drawable/ic_add_credit"
-        android:layout_margin="20dp"/>
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_add_credit" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_add_money"
-        android:layout_margin="20dp"/>
-    <LinearLayout
-        android:id="@+id/banner_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        />
-</android.support.design.widget.CoordinatorLayout>
+        android:layout_gravity="end|bottom"
+        android:layout_margin="10dp"
+        android:src="@drawable/ic_add_money" />
+</RelativeLayout>
