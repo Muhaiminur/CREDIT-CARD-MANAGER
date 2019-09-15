@@ -45,7 +45,7 @@ public class ADD_CARD extends AppCompatActivity {
     @BindView(R.id.show_card)
     CreditCardView showCard;
     @BindView(R.id.fab_edit)
-    FloatingActionButton fabEdit;
+    Button fabEdit;
 
     String card_number = "";
     @BindView(R.id.name)

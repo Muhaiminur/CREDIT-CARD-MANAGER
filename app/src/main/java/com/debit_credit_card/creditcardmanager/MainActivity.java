@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
             AudienceNetworkAds.initialize(this);
             banner_add();
-            loadNativeAd();
+            //loadNativeAd();
             interstaler();
 
         } catch (Exception e) {
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 // Interstitial ad is loaded and ready to be displayed
                 Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
                 // Show the ad
-                interstitialAd.show();
+                //interstitialAd.show();
             }
 
             @Override
@@ -371,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                 // Show the ad
                 interstitialAd.show();
             }
-        }, 9000 * 30); // Show the ad after 15 minutes
+        }, /*1000 * 60 * 1*/30000); // Show the ad after 15 minutes
     }
 
     @OnClick({R.id.fab, R.id.fab_add})
