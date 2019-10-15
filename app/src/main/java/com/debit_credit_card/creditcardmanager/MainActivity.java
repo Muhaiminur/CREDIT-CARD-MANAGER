@@ -6,9 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +24,7 @@ import android.widget.Toast;
 import com.cooltechworks.creditcarddesign.CardEditActivity;
 import com.cooltechworks.creditcarddesign.CreditCardUtils;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
+import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
 import com.facebook.ads.Ad;
 import com.facebook.ads.AdError;
 import com.facebook.ads.AdIconView;
@@ -52,6 +52,7 @@ import fr.ganfra.materialspinner.MaterialSpinner;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -63,13 +64,18 @@ public class MainActivity extends AppCompatActivity {
 
     List<CARD> card_list2 = new ArrayList<>();
     @BindView(R.id.fab)
-    FloatingActionButton fab;
+    Button fab;
 
     final int GET_NEW_CARD = 2;
 
     Two_Adapter adapter;
     @BindView(R.id.fab_add)
-    FloatingActionButton fabAdd;
+    Button fabAdd;
+    @BindView(R.id.total_money)
+    TextView totalMoney;
+
+    double credit = 0;
+    double debit = 0;
 
     private AdView adView;
 
@@ -116,18 +122,53 @@ public class MainActivity extends AppCompatActivity {
             //loadNativeAd();
             interstaler();
 
+            try {
+                pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i1) {
+                    }
+
+                    @Override
+                    public void onPageSelected(int i) {
+                        RealmResults<EXPENSE> results;
+                        results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(i).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
+                        for (EXPENSE expense : results) {
+                            if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
+                                credit = credit + Double.parseDouble(expense.getExpensemoney());
+                            } else {
+                                debit = debit + Double.parseDouble(expense.getExpensemoney());
+                            }
+                        }
+                        totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                        credit = 0;
+                        debit = 0;
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
+                    }
+                });
+
+                RealmResults<EXPENSE> results;
+                results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(0).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
+                for (EXPENSE expense : results) {
+                    if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
+                        credit = credit + Double.parseDouble(expense.getExpensemoney());
+                    } else {
+                        debit = debit + Double.parseDouble(expense.getExpensemoney());
+                    }
+                }
+                totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                credit = 0;
+                debit = 0;
+                //totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+            } catch (Exception e) {
+                Log.d("Error Line Number", Log.getStackTraceString(e));
+            }
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
     }
-
-    /*@OnClick(R.id.fab)
-    public void onViewClicked() {
-        //startActivity(new Intent(context,ADD_CARD.class));
-
-        Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
-        startActivityForResult(intent, GET_NEW_CARD);
-    }*/
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
 

@@ -11,6 +11,7 @@
 
     <string name="edit_card_title_string">EDIT CARD</string>
     <string name="add_expense_title_string">ADD EXPENSE</string>
+    <string name="add_card_title_string">ADD CARD</string>
     <string name="select_card_string">Select Your Card</string>
     <string name="select_name_string">Enter Your Expense Name</string>
     <string name="select_price_string">Enter Your Expense Money</string>
@@ -24,6 +25,7 @@
     <string name="expense_credit_string">TOTAL PAID TO CARD</string>
 
     <string name="expense_edit_title_string">EDIT YOUR EXPENSE</string>
+    <string name="available_title_string">Available Balance: </string>
 
 
     <string-array name="months_array">
