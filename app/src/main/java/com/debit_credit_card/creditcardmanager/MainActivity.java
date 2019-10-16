@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AdView adView;
 
-    private final String TAG = ADD_CARD.class.getSimpleName();
+    private final String TAG = EDIT_CARD_ACTIVITY.class.getSimpleName();
     private NativeAd nativeAd;
     private NativeAdLayout nativeAdLayout;
     private LinearLayout adView2;
@@ -130,38 +130,30 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onPageSelected(int i) {
-                        RealmResults<EXPENSE> results;
-                        results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(i).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
-                        for (EXPENSE expense : results) {
-                            if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
-                                credit = credit + Double.parseDouble(expense.getExpensemoney());
-                            } else {
-                                debit = debit + Double.parseDouble(expense.getExpensemoney());
+                        try {
+                            if (card_list.size() > 0) {
+                                RealmResults<EXPENSE> results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(i).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
+                                for (EXPENSE expense : results) {
+                                    if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
+                                        credit = credit + Double.parseDouble(expense.getExpensemoney());
+                                    } else {
+                                        debit = debit + Double.parseDouble(expense.getExpensemoney());
+                                    }
+                                }
+                                totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                                credit = 0;
+                                debit = 0;
                             }
+                        } catch (Exception e) {
+                            Log.d("Error Line Number", Log.getStackTraceString(e));
                         }
-                        totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
-                        credit = 0;
-                        debit = 0;
                     }
 
                     @Override
                     public void onPageScrollStateChanged(int i) {
                     }
                 });
-
-                RealmResults<EXPENSE> results;
-                results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(0).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
-                for (EXPENSE expense : results) {
-                    if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
-                        credit = credit + Double.parseDouble(expense.getExpensemoney());
-                    } else {
-                        debit = debit + Double.parseDouble(expense.getExpensemoney());
-                    }
-                }
-                totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
-                credit = 0;
-                debit = 0;
-                //totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                check();
             } catch (Exception e) {
                 Log.d("Error Line Number", Log.getStackTraceString(e));
             }
@@ -412,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                 // Show the ad
                 interstitialAd.show();
             }
-        }, /*1000 * 60 * 1*/30000); // Show the ad after 15 minutes
+        }, /*1000 * 60 * 1*/80000); // Show the ad after 15 minutes
     }
 
     @OnClick({R.id.fab, R.id.fab_add})
@@ -492,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     dialog.dismiss();
                     if (edit_card != null) {
-                        Intent intent = new Intent(context, ADD_CARD.class);
+                        Intent intent = new Intent(context, EDIT_CARD_ACTIVITY.class);
                         intent.putExtra("card_number", edit_card.getCardNumber());
                         context.startActivity(intent);
                     }
@@ -539,4 +531,34 @@ public class MainActivity extends AppCompatActivity {
     public static String SCREEN_WIDTH = "width";
     public static String SCREEN_HEIGHT = "height";
     public static String SCREEN_DENSITY = "density";
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try{
+            check();
+        }catch(Exception e){
+          Log.d("Error Line Number",Log.getStackTraceString(e));
+        }
+    }
+
+    public void check(){
+        try{
+            if (card_list.size() > 0) {
+                RealmResults<EXPENSE> results = realm.where(EXPENSE.class).equalTo("cardname.cardNumber", card_list2.get(0).getCardNumber()).findAll().sort("expensedate", Sort.DESCENDING);
+                for (EXPENSE expense : results) {
+                    if (expense.getExpensetype().equalsIgnoreCase(getResources().getString(R.string.select_credit_string))) {
+                        credit = credit + Double.parseDouble(expense.getExpensemoney());
+                    } else {
+                        debit = debit + Double.parseDouble(expense.getExpensemoney());
+                    }
+                }
+                totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                credit = 0;
+                debit = 0;
+            }
+        }catch(Exception e){
+          Log.d("Error Line Number",Log.getStackTraceString(e));
+        }
+    }
 }

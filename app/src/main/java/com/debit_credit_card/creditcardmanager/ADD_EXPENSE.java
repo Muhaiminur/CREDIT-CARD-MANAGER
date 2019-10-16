@@ -11,11 +11,17 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
+import com.facebook.ads.Ad;
+import com.facebook.ads.AdError;
+import com.facebook.ads.AdListener;
+import com.facebook.ads.AdSize;
+import com.facebook.ads.AdView;
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
 
@@ -58,6 +64,9 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
     String expense;
     String date;
     Date final_date;
+
+
+    private AdView banner_adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +119,8 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
 
                 }
             });
+
+            banner_add();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
@@ -209,4 +220,50 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
         //dateTextView.setText(date);
         Toast.makeText(context, date, Toast.LENGTH_LONG).show();
     }*/
+
+    //banner add
+    public void banner_add() {
+        banner_adView = new AdView(this, getResources().getString(R.string.add_expense_banner), AdSize.BANNER_HEIGHT_50);
+
+        // Find the Ad Container
+        LinearLayout adContainer = findViewById(R.id.add_expense_banner_container);
+
+        // Add the ad view to your activity layout
+        adContainer.addView(banner_adView);
+
+        banner_adView.setAdListener(new AdListener() {
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                // Ad error callback
+                //Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                // Ad loaded callback
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+                // Ad clicked callback
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+                // Ad impression logged callback
+            }
+        });
+
+
+        // Request an ad
+        banner_adView.loadAd();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (banner_adView != null) {
+            banner_adView.destroy();
+        }
+        super.onDestroy();
+    }
 }

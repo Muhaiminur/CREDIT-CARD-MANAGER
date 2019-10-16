@@ -56,7 +56,7 @@ public class Two_Adapter extends PagerAdapter {
                 @Override
                 public void onClick(View v) {
                 /*Log.d("abir","ok");
-                Intent intent = new Intent(context, ADD_CARD.class);
+                Intent intent = new Intent(context, EDIT_CARD_ACTIVITY.class);
                 intent.putExtra("card_number",card_list.get(position).getCardNumber());
                 context.startActivity(intent);*/
 

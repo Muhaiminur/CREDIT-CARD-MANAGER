@@ -30,7 +30,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ADD_CARD"
+            android:name=".EDIT_CARD_ACTIVITY"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.cooltechworks.creditcarddesign.CardEditActivity"
