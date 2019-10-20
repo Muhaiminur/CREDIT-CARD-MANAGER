@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             AudienceNetworkAds.initialize(this);
             banner_add();
             //loadNativeAd();
-            interstaler();
+            //interstaler();
 
             try {
                 pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
