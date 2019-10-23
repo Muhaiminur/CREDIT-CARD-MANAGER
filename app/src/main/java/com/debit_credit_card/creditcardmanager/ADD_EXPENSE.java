@@ -120,7 +120,7 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
                 }
             });
 
-            banner_add();
+            //banner_add();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
@@ -263,6 +263,7 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
     protected void onDestroy() {
         if (banner_adView != null) {
             banner_adView.destroy();
+            banner_adView=null;
         }
         super.onDestroy();
     }

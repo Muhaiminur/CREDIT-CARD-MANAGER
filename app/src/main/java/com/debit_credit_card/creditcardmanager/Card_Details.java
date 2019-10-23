@@ -176,7 +176,7 @@ public class Card_Details extends AppCompatActivity {
             }
 
             try {
-                banner_add();
+                //banner_add();
             } catch (Exception e) {
                 Log.d("Error Line Number", Log.getStackTraceString(e));
             }
@@ -406,6 +406,7 @@ public class Card_Details extends AppCompatActivity {
     protected void onDestroy() {
         if (adView != null) {
             adView.destroy();
+            adView=null;
         }
         super.onDestroy();
     }

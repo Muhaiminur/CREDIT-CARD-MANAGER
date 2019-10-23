@@ -92,7 +92,7 @@ public class EDIT_CARD_ACTIVITY extends AppCompatActivity {
             }
 
             //loadNativeAd();
-            banner_add();
+            //banner_add();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
@@ -294,6 +294,7 @@ public class EDIT_CARD_ACTIVITY extends AppCompatActivity {
     protected void onDestroy() {
         if (banner_adView != null) {
             banner_adView.destroy();
+            banner_adView=null;
         }
         super.onDestroy();
     }
