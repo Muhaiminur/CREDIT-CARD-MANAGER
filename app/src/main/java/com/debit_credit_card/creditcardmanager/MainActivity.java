@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
             AudienceNetworkAds.initialize(this);
             //banner_add();
             //loadNativeAd();
-            interstaler();
+            //interstaler();
 
             native_banner_ad();
 
