@@ -1,13 +1,6 @@
 <resources>
     <string name="zero">0</string>
     <string name="app_name">CREDIT CARD MANAGER</string>
-    <string name="inter">9934548976934084_934589323596716</string>
-    <string name="home_page_banner">9934548976934084_934592326929749</string>
-    <string name="home_page_native_banner">9934548976934084_1168452870210359</string>
-    <string name="home_page_native">9934548976934084_934593226929659</string>
-    <string name="card_details_banner">9934548976934084_1123827858006194</string>
-    <string name="add_expense_banner">9934548976934084_1161102507612062</string>
-    <string name="edit_card_banner">9934548976934084_1161102850945361</string>
 
     <!--<string name="inter">VID_HD_9_16_39S_LINK#934548976934084_934589323596716</string>-->
 
@@ -44,4 +37,7 @@
         <item>November</item>
         <item>December</item>
     </string-array>
+
+    <string name="admob_home_banner">ca-app-pub-2851562992535827/4537533669</string>
+    <string name="admob_add_expense_banner">ca-app-pub-2851562992535827/4191362387</string>
 </resources>

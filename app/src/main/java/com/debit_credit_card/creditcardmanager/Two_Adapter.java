@@ -2,12 +2,13 @@ package com.debit_credit_card.creditcardmanager;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.view.PagerAdapter;
+
+import androidx.viewpager.widget.PagerAdapter;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.cooltechworks.creditcarddesign.CreditCardView;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;

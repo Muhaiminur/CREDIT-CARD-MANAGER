@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,22 +28,18 @@ import com.cooltechworks.creditcarddesign.CardEditActivity;
 import com.cooltechworks.creditcarddesign.CreditCardUtils;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdIconView;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.AdOptionsView;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
-import com.facebook.ads.AudienceNetworkAds;
-import com.facebook.ads.InterstitialAd;
-import com.facebook.ads.InterstitialAdListener;
-import com.facebook.ads.MediaView;
-import com.facebook.ads.NativeAd;
-import com.facebook.ads.NativeAdLayout;
-import com.facebook.ads.NativeAdListener;
-import com.facebook.ads.NativeBannerAd;
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,21 +73,9 @@ public class MainActivity extends AppCompatActivity {
     Button fabAdd;
     @BindView(R.id.total_money)
     TextView totalMoney;
-
     double credit = 0;
     double debit = 0;
 
-    private AdView adView;
-
-    private final String TAG = EDIT_CARD_ACTIVITY.class.getSimpleName();
-    private NativeAd nativeAd;
-    private NativeAdLayout nativeAdLayout;
-    private LinearLayout adView2;
-    private InterstitialAd interstitialAd;
-
-    private NativeBannerAd nativeBannerAd;
-    private NativeAdLayout native_banner_nativeAdLayout;
-    private LinearLayout native_banner_adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,14 +108,6 @@ public class MainActivity extends AppCompatActivity {
             final HorizontalInfiniteCycleViewPager pager = findViewById(R.id.horizontal_cycle);
             adapter = new Two_Adapter(card_list2, context);
             pager.setAdapter(adapter);
-
-            AudienceNetworkAds.initialize(this);
-            //banner_add();
-            //loadNativeAd();
-            //interstaler();
-
-            native_banner_ad();
-
             try {
                 pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                     @Override
@@ -165,13 +143,15 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("Error Line Number", Log.getStackTraceString(e));
             }
+
+            Admob_Init();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
     }
 
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
-
+        super.onActivityResult(reqCode, resultCode, data);
         try {
             if (resultCode == RESULT_OK) {
 
@@ -208,218 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-            adView = null;
-        }
-        if (interstitialAd != null) {
-            interstitialAd.destroy();
-            interstitialAd = null;
-        }
-
-        if (nativeBannerAd != null) {
-            nativeBannerAd.unregisterView();
-            nativeBannerAd = null;
-        }
         super.onDestroy();
-    }
-
-    public void banner_add() {
-        adView = new AdView(this, getResources().getString(R.string.home_page_banner), AdSize.BANNER_HEIGHT_50);
-
-        // Find the Ad Container
-        LinearLayout adContainer = findViewById(R.id.banner_container);
-
-        // Add the ad view to your activity layout
-        adContainer.addView(adView);
-
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                //Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Ad loaded callback
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-            }
-        });
-
-
-        // Request an ad
-        adView.loadAd();
-    }
-
-
-    private void loadNativeAd() {
-        // Instantiate a NativeAd object.
-        // NOTE: the placement ID will eventually identify this as your App, you can ignore it for
-        // now, while you are testing and replace it later when you have signed up.
-        // While you are using this temporary code you will only get test ads and if you release
-        // your code like this to the Google Play your users will not receive ads (you will get a no fill error).
-        nativeAd = new NativeAd(this, getResources().getString(R.string.home_page_native));
-        nativeAd.setAdListener(new NativeAdListener() {
-            @Override
-            public void onMediaDownloaded(Ad ad) {
-
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Race condition, load() called again before last ad was displayed
-                if (nativeAd == null || nativeAd != ad) {
-                    return;
-                }
-                // Inflate Native Ad into Container
-                inflateAd(nativeAd);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
-        // Request an ad
-        nativeAd.loadAd();
-    }
-
-    private void inflateAd(NativeAd nativeAd) {
-
-        nativeAd.unregisterView();
-
-        // Add the Ad view into the ad container.
-        nativeAdLayout = findViewById(R.id.native_ad_container);
-        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-        // Inflate the Ad view.  The layout referenced should be the one you created in the last step.
-        adView2 = (LinearLayout) inflater.inflate(R.layout.native_ad_layout, nativeAdLayout, false);
-        nativeAdLayout.addView(adView2);
-
-        // Add the AdOptionsView
-        LinearLayout adChoicesContainer = findViewById(R.id.ad_choices_container);
-        AdOptionsView adOptionsView = new AdOptionsView(MainActivity.this, nativeAd, nativeAdLayout);
-        adChoicesContainer.removeAllViews();
-        adChoicesContainer.addView(adOptionsView, 0);
-
-        // Create native UI using the ad metadata.
-        AdIconView nativeAdIcon = adView2.findViewById(R.id.native_ad_icon);
-        TextView nativeAdTitle = adView2.findViewById(R.id.native_ad_title);
-        MediaView nativeAdMedia = adView2.findViewById(R.id.native_ad_media);
-        TextView nativeAdSocialContext = adView2.findViewById(R.id.native_ad_social_context);
-        TextView nativeAdBody = adView2.findViewById(R.id.native_ad_body);
-        TextView sponsoredLabel = adView2.findViewById(R.id.native_ad_sponsored_label);
-        Button nativeAdCallToAction = adView2.findViewById(R.id.native_ad_call_to_action);
-
-        // Set the Text.
-        nativeAdTitle.setText(nativeAd.getAdvertiserName());
-        nativeAdBody.setText(nativeAd.getAdBodyText());
-        nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
-        nativeAdCallToAction.setVisibility(nativeAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-        nativeAdCallToAction.setText(nativeAd.getAdCallToAction());
-        sponsoredLabel.setText(nativeAd.getSponsoredTranslation());
-
-        // Create a list of clickable views
-        List<View> clickableViews = new ArrayList<>();
-        clickableViews.add(nativeAdTitle);
-        clickableViews.add(nativeAdCallToAction);
-
-        // Register the Title and CTA button to listen for clicks.
-        nativeAd.registerViewForInteraction(
-                adView2,
-                nativeAdMedia,
-                nativeAdIcon,
-                clickableViews);
-    }
-
-    public void interstaler() {
-        interstitialAd = new InterstitialAd(this, getResources().getString(R.string.inter));
-        // Set listeners for the Interstitial Ad
-        interstitialAd.setAdListener(new InterstitialAdListener() {
-            @Override
-            public void onInterstitialDisplayed(Ad ad) {
-                // Interstitial ad displayed callback
-                Log.e(TAG, "Interstitial ad displayed.");
-            }
-
-            @Override
-            public void onInterstitialDismissed(Ad ad) {
-                // Interstitial dismissed callback
-                Log.e(TAG, "Interstitial ad dismissed.");
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                Log.e(TAG, "Interstitial ad failed to load: " + adError.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Interstitial ad is loaded and ready to be displayed
-                Log.d(TAG, "Interstitial ad is loaded and ready to be displayed!");
-                // Show the ad
-                //interstitialAd.show();
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-                Log.d(TAG, "Interstitial ad clicked!");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-                Log.d(TAG, "Interstitial ad impression logged!");
-            }
-        });
-
-        // For auto play video ads, it's recommended to load the ad
-        // at least 30 seconds before it is shown
-        interstitialAd.loadAd();
-        showAdWithDelay();
-    }
-
-    private void showAdWithDelay() {
-        /**
-         * Here is an example for displaying the ad with delay;
-         * Please do not copy the Handler into your project
-         */
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                // Check if interstitialAd has been loaded successfully
-                if (interstitialAd == null || !interstitialAd.isAdLoaded()) {
-                    return;
-                }
-                // Check if ad is already expired or invalidated, and do not show ad if that is the case. You will not get paid to show an invalidated ad.
-                if (interstitialAd.isAdInvalidated()) {
-                    return;
-                }
-                // Show the ad
-                interstitialAd.show();
-            }
-        }, /*1000 * 60 * 1*/80000); // Show the ad after 15 minutes
     }
 
     @OnClick({R.id.fab, R.id.fab_add})
@@ -577,86 +346,112 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    public void native_banner_ad() {
-        nativeBannerAd = new NativeBannerAd(this, getResources().getString(R.string.home_page_native_banner));
-        nativeBannerAd.setAdListener(new NativeAdListener() {
+    public void Admob_Init() {
+        AdView mAdView;
+        InterstitialAd mInterstitialAd;
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
-            public void onMediaDownloaded(Ad ad) {
-                // Native ad finished downloading all assets
-                Log.e(TAG, "Native ad finished downloading all assets.");
-            }
-
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                // Native ad failed to load
-                Log.e(TAG, "Native ad failed to load: " + adError.getErrorMessage());
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Native ad is loaded and ready to be displayed
-                Log.d(TAG, "Native ad is loaded and ready to be displayed!");
-
-                if (nativeBannerAd == null || nativeBannerAd != ad) {
-                    return;
-                }
-                // Inflate Native Banner Ad into Container
-                inflateAd_native_banner(nativeBannerAd);
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Native ad clicked
-                Log.d(TAG, "Native ad clicked!");
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Native ad impression
-                Log.d(TAG, "Native ad impression logged!");
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
-        // load the ad
-        nativeBannerAd.loadAd();
-    }
 
-    private void inflateAd_native_banner(NativeBannerAd nativeBannerAd) {
-        // Unregister last ad
-        nativeBannerAd.unregisterView();
+        //banner
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
 
-        // Add the Ad view into the ad container.
-        native_banner_nativeAdLayout = findViewById(R.id.native_banner_ad_container);
-        LayoutInflater inflater = LayoutInflater.from(MainActivity.this);
-        // Inflate the Ad view.  The layout referenced is the one you created in the last step.
-        native_banner_adView = (LinearLayout) inflater.inflate(R.layout.native_banner_ad_unit, native_banner_nativeAdLayout, false);
-        native_banner_nativeAdLayout.addView(native_banner_adView);
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
 
-        // Add the AdChoices icon
-        RelativeLayout adChoicesContainer = native_banner_adView.findViewById(R.id.ad_choices_container);
-        AdOptionsView adOptionsView = new AdOptionsView(MainActivity.this, nativeBannerAd, native_banner_nativeAdLayout);
-        adChoicesContainer.removeAllViews();
-        adChoicesContainer.addView(adOptionsView, 0);
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
 
-        // Create native UI using the ad metadata.
-        TextView nativeAdTitle = native_banner_adView.findViewById(R.id.native_ad_title);
-        TextView nativeAdSocialContext = native_banner_adView.findViewById(R.id.native_ad_social_context);
-        TextView sponsoredLabel = native_banner_adView.findViewById(R.id.native_ad_sponsored_label);
-        AdIconView nativeAdIconView = native_banner_adView.findViewById(R.id.native_icon_view);
-        Button nativeAdCallToAction = native_banner_adView.findViewById(R.id.native_ad_call_to_action);
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
 
-        // Set the Text.
-        nativeAdCallToAction.setText(nativeBannerAd.getAdCallToAction());
-        nativeAdCallToAction.setVisibility(
-                nativeBannerAd.hasCallToAction() ? View.VISIBLE : View.INVISIBLE);
-        nativeAdTitle.setText(nativeBannerAd.getAdvertiserName());
-        nativeAdSocialContext.setText(nativeBannerAd.getAdSocialContext());
-        sponsoredLabel.setText(nativeBannerAd.getSponsoredTranslation());
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
 
-        // Register the Title and CTA button to listen for clicks.
-        List<View> clickableViews = new ArrayList<>();
-        clickableViews.add(nativeAdTitle);
-        clickableViews.add(nativeAdCallToAction);
-        nativeBannerAd.registerViewForInteraction(native_banner_adView, nativeAdIconView, clickableViews);
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
+        /*AdLoader adLoader = new AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
+                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
+                    @Override
+                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
+                        // Show the ad.
+                    }
+                })
+                .withAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        // Handle the failure by logging, altering the UI, and so on.
+                    }
+                })
+                .withNativeAdOptions(new NativeAdOptions.Builder()
+                        // Methods in the NativeAdOptions.Builder class can be
+                        // used here to specify individual options settings.
+                        .build())
+                .build();
+        adLoader.loadAd(new AdRequest.Builder().build());*/
+
+       /* mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when the ad is displayed.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the interstitial ad is closed.
+
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+        } else {
+            Log.d("TAG", "The interstitial wasn't loaded yet.");
+        }*/
     }
 }

@@ -2,7 +2,9 @@ package com.debit_credit_card.creditcardmanager;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
@@ -13,22 +15,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
-import com.facebook.ads.AdListener;
-import com.facebook.ads.AdSize;
-import com.facebook.ads.AdView;
 import com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker;
 import com.github.florent37.singledateandtimepicker.dialog.SingleDateAndTimePickerDialog;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +39,6 @@ import butterknife.OnClick;
 import fr.ganfra.materialspinner.MaterialSpinner;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import io.realm.RealmResults;
 
 public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog.OnDateSetListener*/ {
 
@@ -64,9 +64,6 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
     String expense;
     String date;
     Date final_date;
-
-
-    private AdView banner_adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,8 +116,7 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
 
                 }
             });
-
-            //banner_add();
+            Admob_Init();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
@@ -214,57 +210,49 @@ public class ADD_EXPENSE extends AppCompatActivity /*implements DatePickerDialog
         }
     }
 
-    /*@Override
-    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        String date = "You picked the following date: " + dayOfMonth + "/" + (monthOfYear + 1) + "/" + year;
-        //dateTextView.setText(date);
-        Toast.makeText(context, date, Toast.LENGTH_LONG).show();
-    }*/
-
-    //banner add
-    public void banner_add() {
-        banner_adView = new AdView(this, getResources().getString(R.string.add_expense_banner), AdSize.BANNER_HEIGHT_50);
-
-        // Find the Ad Container
-        LinearLayout adContainer = findViewById(R.id.add_expense_banner_container);
-
-        // Add the ad view to your activity layout
-        adContainer.addView(banner_adView);
-
-        banner_adView.setAdListener(new AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                // Ad error callback
-                //Toast.makeText(MainActivity.this, "Error: " + adError.getErrorMessage(),Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onAdLoaded(Ad ad) {
-                // Ad loaded callback
-            }
-
-            @Override
-            public void onAdClicked(Ad ad) {
-                // Ad clicked callback
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-                // Ad impression logged callback
-            }
-        });
-
-
-        // Request an ad
-        banner_adView.loadAd();
-    }
-
     @Override
     protected void onDestroy() {
-        if (banner_adView != null) {
-            banner_adView.destroy();
-            banner_adView=null;
-        }
         super.onDestroy();
+    }
+
+    public void Admob_Init() {
+        AdView mAdView;
+        //banner
+        mAdView = findViewById(R.id.addexpense_adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+            }
+
+            @Override
+            public void onAdClicked() {
+                // Code to be executed when the user clicks on an ad.
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when the user is about to return
+                // to the app after tapping on an ad.
+            }
+        });
     }
 }

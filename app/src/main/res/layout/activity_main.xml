@@ -43,10 +43,10 @@
             android:background="@drawable/rectangular_border_blue"
             android:padding="5dp"
             android:text="@string/available_title_string"
+            android:textAllCaps="true"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:textAllCaps="true"/>
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/fab_add"
@@ -84,27 +84,12 @@
             android:textColor="@color/app_white"
             android:textSize="22sp"
             android:textStyle="bold" />
-        <com.facebook.ads.NativeAdLayout
-            android:id="@+id/native_banner_ad_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
 
-        <LinearLayout
-            android:id="@+id/banner_container"
-            android:layout_width="wrap_content"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/adView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.facebook.ads.NativeAdLayout
-                android:id="@+id/native_ad_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </ScrollView>
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/admob_home_banner" />
     </LinearLayout>
 </LinearLayout>
