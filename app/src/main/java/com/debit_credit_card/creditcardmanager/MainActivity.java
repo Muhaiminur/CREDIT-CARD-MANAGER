@@ -458,6 +458,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TAG", "The interstitial wasn't loaded yet.");
                 }
             }
-        }, 9000);
+        }, 90000);
     }
 }
