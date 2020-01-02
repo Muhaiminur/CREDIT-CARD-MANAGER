@@ -5,14 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,14 +27,10 @@ import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
 import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
@@ -76,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     double credit = 0;
     double debit = 0;
 
+    int add_counter = 0;
+    InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                                 credit = 0;
                                 debit = 0;
                             }
+
                         } catch (Exception e) {
                             Log.d("Error Line Number", Log.getStackTraceString(e));
                         }
@@ -196,6 +192,14 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.fab:
                 try {
+                    if (add_counter == 0 || add_counter == 5) {
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                            add_counter++;
+                        } else {
+                            Log.d("TAG", "The interstitial wasn't loaded yet.");
+                        }
+                    }
                     Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
                     startActivityForResult(intent, GET_NEW_CARD);
                 } catch (Exception e) {
@@ -203,10 +207,22 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.fab_add:
-                if (card_list.size() > 0) {
-                    startActivity(new Intent(context, ADD_EXPENSE.class));
-                } else {
-                    Toast.makeText(MainActivity.this, "FIRST ADD NEW CARD", Toast.LENGTH_LONG).show();
+                try {
+                    if (add_counter == 0 || add_counter == 5) {
+                        if (mInterstitialAd.isLoaded()) {
+                            mInterstitialAd.show();
+                            add_counter++;
+                        } else {
+                            Log.d("TAG", "The interstitial wasn't loaded yet.");
+                        }
+                    }
+                    if (card_list.size() > 0) {
+                        startActivity(new Intent(context, ADD_EXPENSE.class));
+                    } else {
+                        Toast.makeText(MainActivity.this, "FIRST ADD NEW CARD", Toast.LENGTH_LONG).show();
+                    }
+                } catch (Exception e) {
+                    Log.d("Error Line Number", Log.getStackTraceString(e));
                 }
                 break;
         }
@@ -337,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
                         debit = debit + Double.parseDouble(expense.getExpensemoney());
                     }
                 }
-                totalMoney.setText(getResources().getString(R.string.available_title_string) + (credit - debit));
+                totalMoney.setText(getResources().getString(R.string.available_title_string) + /*(credit - debit)*/String.format("%.1f", (credit - debit)));
                 credit = 0;
                 debit = 0;
             }
@@ -348,7 +364,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void Admob_Init() {
         AdView mAdView;
-        InterstitialAd mInterstitialAd;
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
@@ -392,26 +407,6 @@ public class MainActivity extends AppCompatActivity {
                 // to the app after tapping on an ad.
             }
         });
-        /*AdLoader adLoader = new AdLoader.Builder(context, "ca-app-pub-3940256099942544/2247696110")
-                .forUnifiedNativeAd(new UnifiedNativeAd.OnUnifiedNativeAdLoadedListener() {
-                    @Override
-                    public void onUnifiedNativeAdLoaded(UnifiedNativeAd unifiedNativeAd) {
-                        // Show the ad.
-                    }
-                })
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(int errorCode) {
-                        // Handle the failure by logging, altering the UI, and so on.
-                    }
-                })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-                        // Methods in the NativeAdOptions.Builder class can be
-                        // used here to specify individual options settings.
-                        .build())
-                .build();
-        adLoader.loadAd(new AdRequest.Builder().build());*/
-
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.admob_home_inter));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -449,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new Handler().postDelayed(new Runnable() {
+        /*new Handler().postDelayed(new Runnable() {
             public void run() {
                 // do something...
                 if (mInterstitialAd.isLoaded()) {
@@ -458,6 +453,25 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("TAG", "The interstitial wasn't loaded yet.");
                 }
             }
-        }, 90000);
+        }, 90000);*/
+    }
+
+
+    public void onBackPressed() {
+        try {
+            if (add_counter == 0 || add_counter == 5) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                    add_counter++;
+                } else {
+                    Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }
+            } else {
+                finish();
+            }
+        } catch (Exception e) {
+            Log.d("Error Line Number", Log.getStackTraceString(e));
+        }
+        return;
     }
 }

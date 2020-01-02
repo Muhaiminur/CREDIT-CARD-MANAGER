@@ -38,9 +38,11 @@
         <item>December</item>
     </string-array>
 
-    <string name="admob_home_banner">ca-app-pub-2851562992535827/4537533669</string>
-    <!--<string name="admob_home_banner">ca-app-pub-3940256099942544/6300978111</string>--><!--test-->
+    <!--<string name="admob_home_banner">ca-app-pub-2851562992535827/4537533669</string>-->
+    <string name="admob_home_banner">ca-app-pub-3940256099942544/6300978111</string>
+    <!--test-->
     <string name="admob_add_expense_banner">ca-app-pub-2851562992535827/4191362387</string>
-    <string name="admob_home_inter">ca-app-pub-2851562992535827/3299160539</string>
-    <!--<string name="admob_home_inter">ca-app-pub-3940256099942544/1033173712</string>--><!--TESTE-->
+    <!--<string name="admob_home_inter">ca-app-pub-2851562992535827/3299160539</string>-->
+    <string name="admob_home_inter">ca-app-pub-3940256099942544/1033173712</string>
+    <!--TESTE-->
 </resources>
