@@ -192,14 +192,14 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.fab:
                 try {
-                    if (add_counter == 0 || add_counter == 5) {
+                    /*if (add_counter == 0 || add_counter == 5) {
                         if (mInterstitialAd.isLoaded()) {
                             mInterstitialAd.show();
                             add_counter++;
                         } else {
                             Log.d("TAG", "The interstitial wasn't loaded yet.");
                         }
-                    }
+                    }*/
                     Intent intent = new Intent(MainActivity.this, CardEditActivity.class);
                     startActivityForResult(intent, GET_NEW_CARD);
                 } catch (Exception e) {
@@ -208,14 +208,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.fab_add:
                 try {
-                    if (add_counter == 0 || add_counter == 5) {
+                    /*if (add_counter == 0 || add_counter == 5) {
                         if (mInterstitialAd.isLoaded()) {
                             mInterstitialAd.show();
                             add_counter++;
                         } else {
                             Log.d("TAG", "The interstitial wasn't loaded yet.");
                         }
-                    }
+                    }*/
                     if (card_list.size() > 0) {
                         startActivity(new Intent(context, ADD_EXPENSE.class));
                     } else {
