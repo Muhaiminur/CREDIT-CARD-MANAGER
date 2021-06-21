@@ -5,10 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
@@ -21,18 +17,26 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.cooltechworks.creditcarddesign.CardEditActivity;
 import com.cooltechworks.creditcarddesign.CreditCardUtils;
 import com.debit_credit_card.creditcardmanager.DATABASE.CARD;
 import com.debit_credit_card.creditcardmanager.DATABASE.EXPENSE;
 import com.gigamole.infinitecycleviewpager.HorizontalInfiniteCycleViewPager;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -381,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
+            public void onAdFailedToLoad(LoadAdError adError) {
                 // Code to be executed when an ad request fails.
             }
 
@@ -397,16 +401,49 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdLeftApplication() {
-                // Code to be executed when the user has left the app.
-            }
-
-            @Override
             public void onAdClosed() {
                 // Code to be executed when the user is about to return
                 // to the app after tapping on an ad.
             }
         });
+        InterstitialAd.load(this, getResources().getString(R.string.admob_home_inter), adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                // The mInterstitialAd reference will be null until
+                // an ad is loaded.
+                mInterstitialAd = interstitialAd;
+                Log.i("home", "onAdLoaded");
+                mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                    @Override
+                    public void onAdDismissedFullScreenContent() {
+                        // Called when fullscreen content is dismissed.
+                        Log.d("TAG", "The ad was dismissed.");
+                    }
+
+                    @Override
+                    public void onAdFailedToShowFullScreenContent(AdError adError) {
+                        // Called when fullscreen content failed to show.
+                        Log.d("TAG", "The ad failed to show.");
+                    }
+
+                    @Override
+                    public void onAdShowedFullScreenContent() {
+                        // Called when fullscreen content is shown.
+                        // Make sure to set your reference to null so you don't
+                        // show it a second time.
+                        mInterstitialAd = null;
+                        Log.d("TAG", "The ad was shown.");
+                    }
+                });
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                // Handle the error
+                Log.i("home", loadAdError.getMessage());
+                mInterstitialAd = null;
+            }
+        });/*
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.admob_home_inter));
         mInterstitialAd.loadAd(new AdRequest.Builder().build());
@@ -442,7 +479,7 @@ public class MainActivity extends AppCompatActivity {
 
                 mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
-        });
+        });*/
 
         /*new Handler().postDelayed(new Runnable() {
             public void run() {
@@ -460,12 +497,20 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         try {
             if (add_counter == 0 || add_counter == 5) {
-                if (mInterstitialAd.isLoaded()) {
+               /* if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                     add_counter++;
                 } else {
                     Log.d("TAG", "The interstitial wasn't loaded yet.");
+                }*/
+
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.show(this);
+                    add_counter++;
+                } else {
+                    Log.d("TAG", "The interstitial ad wasn't ready yet.");
                 }
+
             } else {
                 finish();
             }

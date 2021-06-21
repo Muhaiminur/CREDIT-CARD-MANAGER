@@ -13,7 +13,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Edit_Expense"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Card_Details"
             android:screenOrientation="portrait" />
@@ -38,7 +38,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2851562992535827~6819232018"/>
+            android:value="ca-app-pub-2851562992535827~6819232018" />
     </application>
 
 </manifest>
