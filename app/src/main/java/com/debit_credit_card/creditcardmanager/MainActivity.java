@@ -254,6 +254,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item2:
                 try {
                     showFilterDialog();
+
+                    if (add_counter == 3 || add_counter == 6) {
+                        if (mInterstitialAd != null) {
+                            mInterstitialAd.show(this);
+                            add_counter++;
+                        } else {
+                            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                        }
+                    }
                 } catch (Exception e) {
                     Log.d("Error Line Number", Log.getStackTraceString(e));
                 }
@@ -360,6 +369,15 @@ public class MainActivity extends AppCompatActivity {
                 totalMoney.setText(getResources().getString(R.string.available_title_string) + /*(credit - debit)*/String.format("%.1f", (credit - debit)));
                 credit = 0;
                 debit = 0;
+            }
+
+            if (add_counter == 3 || add_counter == 6) {
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.show(this);
+                    add_counter++;
+                } else {
+                    Log.d("TAG", "The interstitial ad wasn't ready yet.");
+                }
             }
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
@@ -496,24 +514,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         try {
-            if (add_counter == 0 || add_counter == 5) {
-               /* if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    add_counter++;
-                } else {
-                    Log.d("TAG", "The interstitial wasn't loaded yet.");
-                }*/
-
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.show(this);
-                    add_counter++;
-                } else {
-                    Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                }
-
-            } else {
-                finish();
-            }
+            finish();
         } catch (Exception e) {
             Log.d("Error Line Number", Log.getStackTraceString(e));
         }
